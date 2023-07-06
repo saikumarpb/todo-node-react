@@ -19,7 +19,21 @@ export const postTodo = async ({ title, description }) => {
   return res;
 };
 
-export const deleteTodo = async(id) => {
-    const res = await axios.delete(`${BACKEND_URL}/todos/${id}`);
-    return res
-}
+export const updateTodo = async ({ id, title, description }) => {
+  const res = await axios.put(
+    `${BACKEND_URL}/todos/${id}`,
+    { title, description },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  return res;
+};
+
+export const deleteTodo = async (id) => {
+  const res = await axios.delete(`${BACKEND_URL}/todos/${id}`);
+  return res;
+};
