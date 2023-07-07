@@ -72,11 +72,6 @@ function App() {
   );
 }
 
-// function Todo(props) {
-//   // Add a delete button here so user can delete a TODO.
-//   return <div>{props.title}</div>;
-// }
-
 function TodoList({ todoList, removeTodo, getTodoList }) {
   return todoList.map(({ id, title, description }) => (
     <Todo
@@ -108,6 +103,7 @@ function AddTodo({ title, description, handleChange, addTodo }) {
     </div>
   );
 }
+
 function Todo({ id, title, description, removeTodo, getTodoList }) {
   const [isEditing, setIsEditing] = useState(false);
   const [todo, setTodo] = useState({ id, title, description });
@@ -133,6 +129,8 @@ function Todo({ id, title, description, removeTodo, getTodoList }) {
     }
   };
 
+  const cancelEdit = () => setIsEditing(false)
+
   return (
     <div>
       {isEditing ? (
@@ -143,6 +141,7 @@ function Todo({ id, title, description, removeTodo, getTodoList }) {
           handleChange={handleChange}
           removeTodo={removeTodo}
           handleSave={handleSave}
+          cancelEdit={cancelEdit}
         />
       ) : (
         <>
@@ -163,11 +162,10 @@ function Todo({ id, title, description, removeTodo, getTodoList }) {
 }
 
 function EditTodo({
-  id,
   title,
   description,
   handleChange,
-  removeTodo,
+  cancelEdit,
   handleSave,
 }) {
   return (
@@ -183,7 +181,7 @@ function EditTodo({
         onChange={(e) => handleChange(e, 'description')}
       />
       <button onClick={handleSave}>save</button>
-      <button onClick={() => removeTodo(id)}>Delete</button>
+      <button onClick={cancelEdit}>Cancel</button>
     </div>
   );
 }
