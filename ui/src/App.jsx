@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import { deleteTodo, fetchTodoList, postTodo, updateTodo } from './api';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Stack from 'react-bootstrap/Stack';
 
 function App() {
   const emptyTodo = { title: '', description: '' };
@@ -51,55 +57,75 @@ function App() {
   }, []);
 
   return (
-    <>
-      <h1>Todo App</h1>
-      <div>
-        <AddTodo
-          title={newTodo.title}
-          description={newTodo.description}
-          handleChange={handleChange}
-          addTodo={addTodo}
-        />
+    <div
+      className="p-3 d-flex m-auto justify-content-center"
+      style={{ maxWidth: '750px' }}
+    >
+      <div className="d-flex flex-column align-items-center justify-content-center">
+        <h1 style={{ fontStyle: 'italic' }}>Todo</h1>
         <div>
-          <TodoList
-            todoList={todoList}
-            removeTodo={removeTodo}
-            getTodoList={getTodoList}
+          <AddTodo
+            title={newTodo.title}
+            description={newTodo.description}
+            handleChange={handleChange}
+            addTodo={addTodo}
           />
+          <div className="pt-3 d-flex flex-row">
+            <TodoList
+              todoList={todoList}
+              removeTodo={removeTodo}
+              getTodoList={getTodoList}
+            />
+          </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
 function TodoList({ todoList, removeTodo, getTodoList }) {
-  return todoList.map(({ id, title, description }) => (
-    <Todo
-      id={id}
-      title={title}
-      description={description}
-      removeTodo={removeTodo}
-      key={id}
-      getTodoList={getTodoList}
-    />
-  ));
+  return (
+    <Stack gap={2} className="col-md-5 mx-auto">
+      {todoList.map(({ id, title, description }) => (
+        <Todo
+          id={id}
+          title={title}
+          description={description}
+          removeTodo={removeTodo}
+          key={id}
+          getTodoList={getTodoList}
+        />
+      ))}
+    </Stack>
+  );
 }
 
 function AddTodo({ title, description, handleChange, addTodo }) {
   return (
-    <div>
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => handleChange(e, 'title')}
-      />
-      <input
-        id="description"
-        type="text"
-        value={description}
-        onChange={(e) => handleChange(e, 'description')}
-      />
-      <button onClick={addTodo}>Add</button>
+    <div className="mw-50">
+      <Form className="d-flex flex-column">
+        <Form.Group className="mb-3" controlId="title">
+          <Form.Control
+            type="text"
+            placeholder="Title"
+            onChange={(e) => handleChange(e, 'title')}
+            value={title}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="description">
+          <Form.Control
+            type="text"
+            placeholder="description"
+            onChange={(e) => handleChange(e, 'description')}
+            value={description}
+          />
+        </Form.Group>
+
+        <Button variant="success" type="submit" onClick={addTodo}>
+          Add
+        </Button>
+      </Form>
     </div>
   );
 }
@@ -109,7 +135,6 @@ function Todo({ id, title, description, removeTodo, getTodoList }) {
   const [todo, setTodo] = useState({ id, title, description });
 
   const handleChange = (e, key) => {
-    console.log('handle change');
     setTodo((prev) => {
       if (key === 'title') {
         return { ...prev, title: e.target.value };
@@ -129,7 +154,7 @@ function Todo({ id, title, description, removeTodo, getTodoList }) {
     }
   };
 
-  const cancelEdit = () => setIsEditing(false)
+  const cancelEdit = () => setIsEditing(false);
 
   return (
     <div>
@@ -144,18 +169,20 @@ function Todo({ id, title, description, removeTodo, getTodoList }) {
           cancelEdit={cancelEdit}
         />
       ) : (
-        <>
-          <span>{title}</span>
+        <div>
+          <span className="px-3">{title}</span>
           <span>{description}</span>
-          <button
+          <Button
             onClick={() => {
               setIsEditing(true);
             }}
           >
             Edit
-          </button>
-          <button onClick={() => removeTodo(id)}>Delete</button>
-        </>
+          </Button>
+          <Button variant="outline-danger" onClick={() => removeTodo(id)}>
+            Delete
+          </Button>
+        </div>
       )}
     </div>
   );
@@ -170,18 +197,33 @@ function EditTodo({
 }) {
   return (
     <div>
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => handleChange(e, 'title')}
-      />
-      <input
-        type="text"
-        value={description}
-        onChange={(e) => handleChange(e, 'description')}
-      />
-      <button onClick={handleSave}>save</button>
-      <button onClick={cancelEdit}>Cancel</button>
+      <Form className="d-flex flex-column">
+        <Form.Group className="mb-3" controlId="title">
+          <Form.Control
+            type="text"
+            placeholder="Title"
+            onChange={(e) => handleChange(e, 'title')}
+            value={title}
+          />
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="description">
+          <Form.Control
+            type="text"
+            placeholder="description"
+            onChange={(e) => handleChange(e, 'description')}
+            value={description}
+          />
+        </Form.Group>
+
+        <Button variant="success" type="submit" onClick={handleSave}>
+          Save
+        </Button>
+
+        <Button variant="success" type="submit" onClick={cancelEdit}>
+          Cancel
+        </Button>
+      </Form>
     </div>
   );
 }
